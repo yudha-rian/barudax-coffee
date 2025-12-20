@@ -31,7 +31,7 @@
         .section-title {
             color: #6f4e37;
             font-weight: 800;
-            margin-bottom: 10px; /* Jarak judul ke thumbnail */
+            margin-bottom: 10px; 
             margin-top: 20px;
             text-transform: uppercase;
             letter-spacing: 1px;
@@ -44,7 +44,7 @@
             width: 300px;
         }
 
-        /* --- TAMBAHAN BARU: CSS UNTUK HEADER KATEGORI & THUMBNAIL --- */
+        /* --- CSS UNTUK HEADER KATEGORI & THUMBNAIL --- */
         .category-header {
             text-align: center;
             margin-bottom: 40px;
@@ -108,7 +108,7 @@
 
             <div class="d-flex justify-content-center mt-3">
                 @foreach($coffees->take(4) as $item)
-                    <img src="{{ $item->image }}" class="category-thumb" alt="Preview" title="{{ $item->name }}">
+                    <img src="{{ asset($item->image) }}" class="category-thumb" alt="Preview" title="{{ $item->name }}">
                 @endforeach
             </div>
         </div>
@@ -117,7 +117,8 @@
             @foreach($coffees as $menu)
             <div class="col-md-6 col-lg-4 mb-4">
                 <div class="card menu-card h-100">
-                    <img src="{{ $menu->image }}" class="card-img-top" alt="{{ $menu->name }}">
+                    <img src="{{ asset($menu->image) }}" class="card-img-top" alt="{{ $menu->name }}">
+                    
                     <div class="card-body d-flex flex-column">
                         <div class="d-flex justify-content-between align-items-start mb-2">
                             <h5 class="card-title fw-bold mb-0">{{ $menu->name }}</h5>
@@ -160,7 +161,7 @@
 
             <div class="d-flex justify-content-center mt-3">
                 @foreach($nonCoffees->take(4) as $item)
-                    <img src="{{ $item->image }}" class="category-thumb" alt="Preview" title="{{ $item->name }}">
+                    <img src="{{ asset($item->image) }}" class="category-thumb" alt="Preview" title="{{ $item->name }}">
                 @endforeach
             </div>
         </div>
@@ -169,7 +170,8 @@
             @foreach($nonCoffees as $menu)
             <div class="col-md-6 col-lg-4 mb-4">
                 <div class="card menu-card h-100">
-                    <img src="{{ $menu->image }}" class="card-img-top" alt="{{ $menu->name }}">
+                    <img src="{{ asset($menu->image) }}" class="card-img-top" alt="{{ $menu->name }}">
+                    
                     <div class="card-body d-flex flex-column">
                         <div class="d-flex justify-content-between align-items-start mb-2">
                             <h5 class="card-title fw-bold mb-0">{{ $menu->name }}</h5>
