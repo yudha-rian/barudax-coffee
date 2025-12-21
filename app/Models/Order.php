@@ -12,12 +12,20 @@ class Order extends Model
     // --- BAGIAN INI YANG KURANG TADI ---
     // Daftar kolom yang diizinkan untuk diisi datanya
     protected $fillable = [
-        'customer_name',
-        'table_number',
-        'seat_image',
-        'total_price',
-        'status'
-    ];
+    'user_id', // <--- TAMBAHKAN INI
+    'customer_name',
+    'table_number', 
+    'seat_image',
+    'total_price',
+    'status',
+    'payment_proof'
+];
+
+// Order dimiliki oleh User
+public function user()
+{
+    return $this->belongsTo(User::class);
+}
 
     // Relasi ke tabel item pesanan
     public function items()

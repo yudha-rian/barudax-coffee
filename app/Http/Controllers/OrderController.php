@@ -51,34 +51,42 @@ class OrderController extends Controller
     // 3. Proses Simpan Order ke Database
     public function store(Request $request)
     {
-        // Validasi input
+        // 1. Validasi Input
         $request->validate([
             'customer_name' => 'required',
             'table_number' => 'required',
-            'seat_image' => 'image|nullable|max:2048' // Maksimal 2MB
+            'seat_image' => 'image|nullable|max:2048',
+            'payment_proof' => 'required|image|max:2048' // Wajib upload bukti
         ]);
 
-        // Handle Upload Foto
-        $imagePath = null;
+        // 2. Handle Upload Foto Meja
+        $seatPath = null;
         if ($request->hasFile('seat_image')) {
-            // Simpan ke folder 'public/seat_images'
-            $imagePath = $request->file('seat_image')->store('seat_images', 'public');
+            $seatPath = $request->file('seat_image')->store('seat_images', 'public');
         }
 
-        // Hitung ulang total untuk keamanan
+        // 3. Handle Upload Bukti Bayar (BARU)
+        $proofPath = null;
+        if ($request->hasFile('payment_proof')) {
+            $proofPath = $request->file('payment_proof')->store('payment_proofs', 'public');
+        }
+
+        // 4. Hitung Total
         $cart = session()->get('cart', []);
         $total = 0;
         foreach($cart as $item) $total += $item['price'] * $item['quantity'];
 
-        // Simpan Data Utama Order
+        // 5. Simpan ke Database
         $order = Order::create([
+            'user_id' => auth()->id(), //Ambil ID user jika sedang login, jika tidak null
             'customer_name' => $request->customer_name,
             'table_number' => $request->table_number,
-            'seat_image' => $imagePath,
+            'seat_image' => $seatPath,
+            'payment_proof' => $proofPath, // Simpan path bukti
             'total_price' => $total,
         ]);
 
-        // Simpan Rincian Item
+        // 6. Simpan Detail Item
         foreach ($cart as $item) {
             OrderItem::create([
                 'order_id' => $order->id,
@@ -89,9 +97,9 @@ class OrderController extends Controller
             ]);
         }
 
-        // Kosongkan keranjang
+        // 7. Bersihkan keranjang
         session()->forget('cart');
 
-        return redirect('/')->with('success', 'Pesanan berhasil dibuat! Mohon tunggu.');
+        return redirect('/')->with('success', 'Pesanan & Pembayaran berhasil dikirim! Mohon tunggu verifikasi.');
     }
 }

@@ -52,27 +52,39 @@
 
                             <div class="mb-3">
                                 <label class="form-label">Nomor Meja / Lokasi Duduk</label>
-                                <input type="text" name="table_number" class="form-control" placeholder="Contoh: Meja 5, atau 'Di kursi sofa pojok'" required>
+                                <input type="text" name="table_number" class="form-control" placeholder="Contoh: Meja 5" required>
                             </div>
 
                             <div class="mb-3">
                                 <label class="form-label">Foto Lokasi (Opsional)</label>
-                                <div class="form-text mb-2">Bantu kami menemukanmu dengan mengupload foto mejamu/sekitarmu.</div>
                                 <input type="file" name="seat_image" class="form-control" accept="image/*">
                             </div>
 
                             <hr class="my-4">
 
+                            <h4 class="mb-3 text-primary">Pembayaran (QRIS)</h4>
+                            <div class="alert alert-info d-flex align-items-center">
+                                <div>Silakan scan QRIS di bawah ini untuk membayar. Total: <strong>Rp {{ number_format($total, 0, ',', '.') }}</strong></div>
+                            </div>
+
+                            <div class="text-center mb-3">
+                                <img src="{{ asset('img/qris.jpg') }}" alt="QRIS Code" style="width: 200px; border: 2px solid #ddd; border-radius: 10px;">
+                                <p class="small text-muted mt-1">Scan menggunakan GoPay, OVO, Dana, atau BCA Mobile</p>
+                            </div>
+
+                            <div class="mb-4">
+                                <label class="form-label fw-bold">Upload Bukti Pembayaran <span class="text-danger">*</span></label>
+                                <input type="file" name="payment_proof" class="form-control" accept="image/*" required>
+                                <div class="form-text">Pesanan tidak akan diproses tanpa bukti pembayaran.</div>
+                            </div>
                             <button class="w-100 btn btn-primary btn-lg" type="submit">
-                                ✅ Kirim Pesanan
+                                ✅ Kirim Pesanan & Bukti
                             </button>
                             <a href="/" class="btn btn-link w-100 mt-2">Kembali ke Menu</a>
                         </form>
                     </div>
                 </div>
             </div>
-        </div>
-    </div>
 
 </body>
 </html>

@@ -16,8 +16,11 @@
             transition: 0.3s;
         }
         .card-order:hover { transform: translateY(-3px); box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
-        .seat-img { width: 100%; height: 150px; object-fit: cover; border-radius: 5px; }
+        .seat-img { width: 100%; height: 100px; object-fit: cover; border-radius: 5px; cursor: pointer; }
         .stat-card { border-radius: 10px; border: none; color: white; }
+        
+        /* CSS Khusus untuk label kecil di atas foto */
+        .img-label { font-size: 11px; font-weight: bold; display: block; margin-bottom: 4px; }
     </style>
 </head>
 <body>
@@ -57,6 +60,31 @@
             </div>
         </div>
 
+        <div class="card shadow-sm mb-4 border-0">
+            <div class="card-body">
+                <h5 class="mb-3 fw-bold text-dark">⭐ Ulasan Pelanggan Terbaru</h5>
+                <div class="row">
+                    @forelse($feedbacks as $fb)
+                    <div class="col-md-4 mb-3">
+                        <div class="p-3 bg-light rounded h-100 border">
+                            <div class="d-flex justify-content-between mb-2">
+                                <strong>{{ $fb->customer_name }}</strong>
+                                <span class="text-warning" style="letter-spacing: 2px;">
+                                    @for($i=0; $i<$fb->rating; $i++) ★ @endfor
+                                </span>
+                            </div>
+                            <p class="small text-muted mb-0 fst-italic">"{{ $fb->message }}"</p>
+                            <small class="text-secondary mt-2 d-block" style="font-size: 10px;">
+                                {{ $fb->created_at->diffForHumans() }}
+                            </small>
+                        </div>
+                    </div>
+                    @empty
+                    <div class="col-12 text-center text-muted small py-3">Belum ada ulasan masuk hari ini.</div>
+                    @endforelse
+                </div>
+            </div>
+        </div>
         <h4 class="mb-3 text-warning fw-bold">🔥 Pesanan Masuk ({{ count($pendingOrders) }})</h4>
         
         @if(count($pendingOrders) == 0)
@@ -72,11 +100,29 @@
                         <span class="badge bg-warning text-dark">Meja: {{ $order->table_number }}</span>
                     </div>
                     
-                    @if($order->seat_image)
-                    <div class="p-2">
-                        <img src="{{ asset('storage/' . $order->seat_image) }}" class="seat-img" alt="Lokasi">
+                    <div class="d-flex border-bottom bg-light">
+                        <div class="w-50 p-2 border-end text-center">
+                            <span class="img-label text-muted">📍 Lokasi</span>
+                            @if($order->seat_image)
+                                <a href="{{ asset('storage/' . $order->seat_image) }}" target="_blank">
+                                    <img src="{{ asset('storage/' . $order->seat_image) }}" class="seat-img" alt="Lokasi">
+                                </a>
+                            @else
+                                <span class="small text-muted fst-italic">- Tidak ada foto -</span>
+                            @endif
+                        </div>
+
+                        <div class="w-50 p-2 text-center">
+                            <span class="img-label text-success">💰 Bukti Bayar</span>
+                            @if($order->payment_proof)
+                                <a href="{{ asset('storage/' . $order->payment_proof) }}" target="_blank">
+                                    <img src="{{ asset('storage/' . $order->payment_proof) }}" class="seat-img border border-success" alt="Bukti">
+                                </a>
+                            @else
+                                <span class="small text-danger fw-bold">- Belum Upload -</span>
+                            @endif
+                        </div>
                     </div>
-                    @endif
 
                     <div class="card-body">
                         <ul class="list-group list-group-flush mb-3">
@@ -91,14 +137,14 @@
                             </li>
                             @endforeach
                         </ul>
-                        <div class="alert alert-secondary py-1 text-center small mb-0">
+                        <div class="alert alert-secondary py-1 text-center small mb-0 fw-bold">
                             Total: Rp {{ number_format($order->total_price, 0, ',', '.') }}
                         </div>
                     </div>
                     <div class="card-footer bg-white border-0">
                         <form action="{{ route('admin.order.complete', $order->id) }}" method="POST">
                             @csrf
-                            <button class="btn btn-success w-100 fw-bold">✅ Pesanan Siap!</button>
+                            <button class="btn btn-success w-100 fw-bold btn-sm py-2">✅ Verifikasi & Selesai</button>
                         </form>
                     </div>
                 </div>
@@ -120,6 +166,7 @@
                                 <th>Meja</th>
                                 <th>Item</th>
                                 <th>Total</th>
+                                <th>Bukti</th>
                                 <th>Status</th>
                             </tr>
                         </thead>
@@ -135,6 +182,13 @@
                                     @endforeach
                                 </td>
                                 <td>Rp {{ number_format($order->total_price, 0, ',', '.') }}</td>
+                                <td>
+                                    @if($order->payment_proof)
+                                        <a href="{{ asset('storage/' . $order->payment_proof) }}" target="_blank" class="btn btn-sm btn-outline-primary">Lihat</a>
+                                    @else
+                                        -
+                                    @endif
+                                </td>
                                 <td><span class="badge bg-success">Selesai</span></td>
                             </tr>
                             @endforeach

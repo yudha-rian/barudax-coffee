@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Order;
 use App\Models\Menu;
 use App\Models\OrderItem;
+use App\Models\Feedback;
 
 class AdminController extends Controller
 {
@@ -49,15 +50,40 @@ class AdminController extends Controller
             'coffeeCount',
             'nonCoffeeCount'
         ));
+
+        // Tambahkan ini: Ambil 5 feedback terbaru
+    $feedbacks = Feedback::latest()->take(5)->get();
+    
+    // Tambahkan 'feedbacks' ke compact
+    return view('admin.dashboard', compact(
+        'pendingOrders', 'completedOrders', 'totalRevenue', 'totalOrders', 
+        'coffeeCount', 'nonCoffeeCount', 
+        'feedbacks' // <--- Masukkan variabel baru ini
+    ));
     }
 
     // Fungsi untuk menandai pesanan selesai
     public function completeOrder($id)
     {
-        $order = Order::find($id);
-        $order->status = 'completed';
-        $order->save();
+        $order = Order::with('user')->find($id);
+        
+        // Cek status agar poin tidak nambah berkali-kali jika tombol ditekan double
+        if ($order->status == 'pending') {
+            $order->status = 'completed';
+            $order->save();
 
-        return redirect()->back()->with('success', 'Pesanan selesai disajikan!');
+            // === LOGIKA LOYALITAS ===
+            // Jika pesanan ini milik member (ada user_id nya)
+            if ($order->user_id) {
+                // Rumus: Total Harga dibagi 10.000 (dibulatkan ke bawah)
+                // Contoh: Belanja 25.000 -> dapat 2 poin
+                $pointsEarned = floor($order->total_price / 10000);
+                
+                // Tambahkan ke saldo poin user
+                $order->user->increment('points', $pointsEarned);
+            }
+        }
+
+        return redirect()->back()->with('success', 'Pesanan selesai & Poin pelanggan telah ditambahkan!');
     }
 }
