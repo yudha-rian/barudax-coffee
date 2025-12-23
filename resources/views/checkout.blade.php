@@ -6,15 +6,13 @@
     <title>Checkout Pesanan</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
-
 <body class="bg-light">
 
 <div class="container py-5">
     <h2 class="mb-4 text-center">Konfirmasi Pesanan</h2>
 
     <div class="row">
-
-        <!-- RINGKASAN KERANJANG -->
+        <!-- Ringkasan Keranjang -->
         <div class="col-md-5 order-md-2 mb-4">
             <h4 class="d-flex justify-content-between align-items-center mb-3">
                 <span class="text-primary">Keranjang Anda</span>
@@ -23,33 +21,36 @@
 
             <ul class="list-group mb-3 shadow-sm">
                 @forelse($cart as $item)
-                    <li class="list-group-item d-flex justify-content-between lh-sm">
-                        <div>
-                            <h6 class="my-0">{{ $item['name'] }} (x{{ $item['quantity'] }})</h6>
-                            <small class="text-muted">{{ $item['note'] ?? '-' }}</small>
-                        </div>
-                        <span class="text-muted">
-                            Rp {{ number_format($item['price'] * $item['quantity'], 0, ',', '.') }}
-                        </span>
-                    </li>
+                <li class="list-group-item d-flex justify-content-between lh-sm">
+                    <div>
+                        <h6 class="my-0">
+                            {{ $item['name'] }} (x{{ $item['quantity'] }})
+                        </h6>
+                        <small class="text-muted">
+                            {{ $item['note'] ?? '-' }}
+                        </small>
+                    </div>
+                    <span class="text-muted">
+                        Rp {{ number_format($item['price'] * $item['quantity'], 0, ',', '.') }}
+                    </span>
+                </li>
                 @empty
-                    <li class="list-group-item text-center text-muted">
-                        Keranjang kosong
-                    </li>
+                <li class="list-group-item text-center">
+                    Keranjang kosong
+                </li>
                 @endforelse
 
-                <li class="list-group-item d-flex justify-content-between fw-bold">
-                    <span>Total</span>
+                <li class="list-group-item d-flex justify-content-between fw-bold bg-white">
+                    <span>Total (IDR)</span>
                     <strong>Rp {{ number_format($total, 0, ',', '.') }}</strong>
                 </li>
             </ul>
         </div>
 
-        <!-- FORM CHECKOUT -->
+        <!-- Form Checkout -->
         <div class="col-md-7 order-md-1">
             <div class="card shadow-sm border-0">
                 <div class="card-body">
-
                     <h4 class="mb-3">Informasi Pelanggan</h4>
 
                     <form action="{{ route('order.store') }}" method="POST" enctype="multipart/form-data">
@@ -57,12 +58,14 @@
 
                         <div class="mb-3">
                             <label class="form-label">Nama Pemesan</label>
-                            <input type="text" name="customer_name" class="form-control" required>
+                            <input type="text" name="customer_name" class="form-control"
+                                   placeholder="Masukkan nama Anda" required>
                         </div>
 
                         <div class="mb-3">
                             <label class="form-label">Nomor Meja / Lokasi Duduk</label>
-                            <input type="text" name="table_number" class="form-control" required>
+                            <input type="text" name="table_number" class="form-control"
+                                   placeholder="Contoh: Meja 5" required>
                         </div>
 
                         <div class="mb-3">
@@ -73,18 +76,17 @@
                         <hr class="my-4">
 
                         <h4 class="mb-3 text-primary">Pembayaran (QRIS)</h4>
-
                         <div class="alert alert-info">
-                            Total pembayaran:
-                            <strong>Rp {{ number_format($total, 0, ',', '.') }}</strong>
+                            Silakan scan QRIS di bawah ini untuk membayar.
+                            Total: <strong>Rp {{ number_format($total, 0, ',', '.') }}</strong>
                         </div>
 
                         <div class="text-center mb-3">
                             <img src="{{ asset('img/qris.jpg') }}"
                                  alt="QRIS"
-                                 style="width:200px;border-radius:10px;border:2px solid #ddd;">
-                            <p class="small text-muted mt-2">
-                                Scan via GoPay, OVO, Dana, BCA Mobile
+                                 style="width:200px;border:2px solid #ddd;border-radius:10px;">
+                            <p class="small text-muted mt-1">
+                                Scan via GoPay, OVO, Dana, atau BCA Mobile
                             </p>
                         </div>
 
@@ -92,26 +94,25 @@
                             <label class="form-label fw-bold">
                                 Upload Bukti Pembayaran <span class="text-danger">*</span>
                             </label>
-                            <input type="file"
-                                   name="payment_proof"
-                                   class="form-control"
-                                   accept="image/*"
-                                   required>
+                            <input type="file" name="payment_proof"
+                                   class="form-control" accept="image/*" required>
+                            <div class="form-text">
+                                Pesanan tidak diproses tanpa bukti pembayaran.
+                            </div>
                         </div>
 
-                        <button type="submit" class="btn btn-primary btn-lg w-100">
+                        <button type="submit" class="w-100 btn btn-primary btn-lg">
                             ✅ Kirim Pesanan & Bukti
                         </button>
 
                         <a href="/" class="btn btn-link w-100 mt-2">
-                            ← Kembali ke Menu
+                            Kembali ke Menu
                         </a>
                     </form>
 
                 </div>
             </div>
         </div>
-
     </div>
 </div>
 
