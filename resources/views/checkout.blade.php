@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Checkout Pesanan</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" rel="stylesheet">
 </head>
 <body class="bg-light">
 
@@ -40,9 +41,20 @@
             <div class="col-md-7 order-md-1">
                 <div class="card shadow-sm border-0">
                     <div class="card-body">
+                        
+                        @if ($errors->any())
+                            <div class="alert alert-danger">
+                                <ul class="mb-0">
+                                    @foreach ($errors->all() as $error)
+                                        <li>{{ $error }}</li>
+                                    @endforeach
+                                </ul>
+                            </div>
+                        @endif
+
                         <h4 class="mb-3">Informasi Pelanggan</h4>
                         
-                        <form action="{{ route('order.store') }}" method="POST" enctype="multipart/form-data">
+                        <form id="checkoutForm" action="{{ route('order.store') }}" method="POST" enctype="multipart/form-data">
                             @csrf
                             
                             <div class="mb-3">
@@ -77,7 +89,8 @@
                                 <input type="file" name="payment_proof" class="form-control" accept="image/*" required>
                                 <div class="form-text">Pesanan tidak akan diproses tanpa bukti pembayaran.</div>
                             </div>
-                            <button class="w-100 btn btn-primary btn-lg" type="submit">
+
+                            <button type="button" onclick="confirmSubmit()" class="w-100 btn btn-primary btn-lg">
                                 ✅ Kirim Pesanan & Bukti
                             </button>
                             <a href="/" class="btn btn-link w-100 mt-2">Kembali ke Menu</a>
@@ -85,6 +98,41 @@
                     </div>
                 </div>
             </div>
+        </div>
+    </div>
 
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <script>
+        function confirmSubmit() {
+            Swal.fire({
+                title: 'Sudah yakin?',
+                text: "Pastikan data dan bukti pembayaran sudah benar!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#0d6efd',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Ya, Kirim Sekarang!',
+                cancelButtonText: 'Cek Lagi'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // Tampilkan loading saat proses kirim
+                    Swal.fire({
+                        title: 'Mengirim Pesanan...',
+                        text: 'Mohon tunggu sebentar',
+                        allowOutsideClick: false,
+                        didOpen: () => {
+                            Swal.showLoading();
+                        }
+                    });
+                    
+                    // Submit form secara manual
+                    document.getElementById('checkoutForm').submit();
+                }
+            })
+        }
+    </script>
 </body>
 </html>
