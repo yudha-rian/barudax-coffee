@@ -16,23 +16,23 @@ class MenuSeeder extends Seeder
         // ============================
         
         Menu::create([
-            'name' => 'Kopi Susu Gula Aren',
+            'name' => 'Americano',
             'price' => 18000,
             'category' => 'coffee',
-            'description' => 'Espresso dengan susu segar dan gula aren asli.',
+            'description' => 'Espresso dengan tambahan air.',
             'image' => 'img/coffee1.jpeg' 
         ]);
 
         Menu::create([
-            'name' => 'Americano',
-            'price' => 15000,
+            'name' => 'Caramel Macchiato',
+            'price' => 25000,
             'category' => 'coffee',
-            'description' => 'Espresso shot dengan air panas.',
+            'description' => 'Kopi susu dengan tambahan saus caramel dan macchiato.',
             'image' => 'img/coffee2.jpeg'
         ]);
 
         Menu::create([
-            'name' => 'Cappuccino',
+            'name' => 'Kopi Susu',
             'price' => 20000,
             'category' => 'coffee',
             'description' => 'Espresso dengan susu foam tebal yang lembut.',
@@ -40,18 +40,18 @@ class MenuSeeder extends Seeder
         ]);
 
         Menu::create([
-            'name' => 'Caramel Macchiato',
+            'name' => 'Mocchachino',
             'price' => 23000,
             'category' => 'coffee',
-            'description' => 'Perpaduan espresso, vanilla syrup, dan saus karamel.',
+            'description' => 'Perpaduan espresso, coklat, dan susu yang creamy.',
             'image' => 'img/coffee4.jpeg'
         ]);
 
         Menu::create([
-            'name' => 'Moccachino',
-            'price' => 21000,
+            'name' => 'Kopi Susu Gula Aren',
+            'price' => 28000,
             'category' => 'coffee',
-            'description' => 'Kopi susu dengan sentuhan rasa cokelat manis.',
+            'description' => 'Perpaduan espresso, gula aren, dan susu yang creamy.',
             'image' => 'img/coffee5.jpeg'
         ]);
 
@@ -62,42 +62,42 @@ class MenuSeeder extends Seeder
         // ================================
 
         Menu::create([
-            'name' => 'Matcha Latte',
+            'name' => 'Red Velvet Milky',
             'price' => 22000,
             'category' => 'non-coffee',
-            'description' => 'Bubuk matcha jepang premium dengan susu.',
+            'description' => 'Bubuk red velvet premium dengan susu yang creamy.',
             'image' => 'img/non1.jpeg'
         ]);
 
         Menu::create([
-            'name' => 'Chocolate Ice',
-            'price' => 20000,
+            'name' => 'Choco Avocado',
+            'price' => 25000,
             'category' => 'non-coffee',
-            'description' => 'Coklat belgia yang creamy.',
+            'description' => 'Sirup avocado ditambah coklat premium dan susu yang creamy.',
             'image' => 'img/non2.jpeg' 
         ]);
 
         Menu::create([
-            'name' => 'Red Velvet Latte',
-            'price' => 21000,
+            'name' => 'Matcha Cheezy',
+            'price' => 28000,
             'category' => 'non-coffee',
-            'description' => 'Minuman manis dengan rasa red velvet cake yang unik.',
+            'description' => 'Perpaduan matcha bubuk premium dengan keju yang gurih dan susu yang creamy.',
             'image' => 'img/non3.jpeg'
         ]);
 
         Menu::create([
-            'name' => 'Lemon Tea',
-            'price' => 12000,
+            'name' => 'Strawberry Cheezy Milk',
+            'price' => 30000,
             'category' => 'non-coffee',
-            'description' => 'Teh segar dengan perasan lemon asli.',
+            'description' => 'Perpaduan antara sirup dan selai strawberry, ditambah keju yang gurih, dan susu yang creamy.',
             'image' => 'img/non4.jpeg'
         ]);
 
         Menu::create([
-            'name' => 'Lychee Yakult',
-            'price' => 18000,
+            'name' => 'Matcha Latte',
+            'price' => 20000,
             'category' => 'non-coffee',
-            'description' => 'Kesegaran yakult dipadu dengan sirup leci dan buah asli.',
+            'description' => 'Perpaduan antara matcha premium dan susu creamy.',
             'image' => 'img/non5.jpeg'
         ]);
     }
