@@ -92,7 +92,7 @@
         <div class="container">
             <img src="https://cdn-icons-png.flaticon.com/512/751/751621.png" alt="Logo" width="90" class="mb-3">
             <h1 class="fw-bold">Selamat Datang di Barudax Coffee</h1>
-            <p class="lead opacity-75">Seduh cerita barumu hari ini bersama kopi terbaik kami.</p>
+            <p class="lead opacity-75">Take your time, take your coffee.</p>
         </div>
     </div>
 
