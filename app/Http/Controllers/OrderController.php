@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreOrderRequest; // <--- 1. Import Form Request Baru
 use Illuminate\Http\Request;
 use App\Models\Menu;
 use App\Models\Order;
@@ -49,44 +50,41 @@ class OrderController extends Controller
     }
 
     // 3. Proses Simpan Order ke Database
-    public function store(Request $request)
+    // Perhatikan: Menggunakan StoreOrderRequest, bukan Request biasa
+    public function store(StoreOrderRequest $request) 
     {
-        // 1. Validasi Input
-        $request->validate([
-            'customer_name' => 'required',
-            'table_number' => 'required',
-            'seat_image' => 'image|nullable|max:2048',
-            'payment_proof' => 'required|image|max:2048' // Wajib upload bukti
-        ]);
+        // --- VALIDASI MANUAL DIHAPUS ---
+        // Karena validasi sudah otomatis dijalankan oleh StoreOrderRequest.
+        // Jika data tidak valid, Laravel otomatis mengembalikan user ke halaman sebelumnya.
 
-        // 2. Handle Upload Foto Meja
+        // 1. Handle Upload Foto Meja
         $seatPath = null;
         if ($request->hasFile('seat_image')) {
             $seatPath = $request->file('seat_image')->store('seat_images', 'public');
         }
 
-        // 3. Handle Upload Bukti Bayar (BARU)
+        // 2. Handle Upload Bukti Bayar
         $proofPath = null;
         if ($request->hasFile('payment_proof')) {
             $proofPath = $request->file('payment_proof')->store('payment_proofs', 'public');
         }
 
-        // 4. Hitung Total
+        // 3. Hitung Total
         $cart = session()->get('cart', []);
         $total = 0;
         foreach($cart as $item) $total += $item['price'] * $item['quantity'];
 
-        // 5. Simpan ke Database
+        // 4. Simpan ke Database
         $order = Order::create([
-            'user_id' => auth()->id(), //Ambil ID user jika sedang login, jika tidak null
+            'user_id' => auth()->id(), // Ambil ID user jika login (fitur loyalitas)
             'customer_name' => $request->customer_name,
             'table_number' => $request->table_number,
             'seat_image' => $seatPath,
-            'payment_proof' => $proofPath, // Simpan path bukti
+            'payment_proof' => $proofPath, 
             'total_price' => $total,
         ]);
 
-        // 6. Simpan Detail Item
+        // 5. Simpan Detail Item
         foreach ($cart as $item) {
             OrderItem::create([
                 'order_id' => $order->id,
@@ -97,7 +95,7 @@ class OrderController extends Controller
             ]);
         }
 
-        // 7. Bersihkan keranjang
+        // 6. Bersihkan keranjang
         session()->forget('cart');
 
         return redirect('/')->with('success', 'Pesanan & Pembayaran berhasil dikirim! Mohon tunggu verifikasi.');

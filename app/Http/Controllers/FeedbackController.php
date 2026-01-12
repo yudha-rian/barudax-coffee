@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreFeedbackRequest; // <--- 1. Import Form Request Baru
 use Illuminate\Http\Request;
 use App\Models\Feedback;
 
@@ -14,17 +15,19 @@ class FeedbackController extends Controller
     }
 
     // Simpan Data
-    public function store(Request $request)
+    // Perhatikan: Menggunakan StoreFeedbackRequest, bukan Request biasa
+    public function store(StoreFeedbackRequest $request)
     {
-        $request->validate([
-            'rating' => 'required|integer|min:1|max:5',
-            'message' => 'required|string|max:500'
-        ]);
+        // --- VALIDASI MANUAL DIHAPUS ---
+        // $request->validate([...]); 
+        // Bagian ini sudah tidak perlu karena Laravel otomatis menjalankan 
+        // rules() yang ada di dalam StoreFeedbackRequest.php sebelum masuk ke sini.
 
+        // Langsung simpan ke database
         Feedback::create([
             'customer_name' => $request->customer_name ?? 'Anonim',
-            'rating' => $request->rating,
-            'message' => $request->message
+            'rating'        => $request->rating,
+            'message'       => $request->message
         ]);
 
         return redirect('/')->with('success', 'Terima kasih atas masukan Anda! Kami akan terus berbenah.');
